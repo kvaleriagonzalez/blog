@@ -9,9 +9,20 @@ const categoryRoute = require("./routes/categories");
 const multer = require("multer");
 
 const uri = "mongodb://localhost:27017/blog";
+// server.js
+const DB_URI = process.env.DB_URI || 'mongodb://localhost:27017/dbname';
+const PORT = process.env.PORT || '8080';
 
 app.use(express.json());
-
+// server.js at the very end of the file.
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('./build'));
+    // only add this part if you are using React Router
+    app.get('*', (req,res) =>{
+        console.log(path.join(__dirname+'/build/index.html'));
+        res.sendFile(path.join(__dirname+'/build/index.html'));
+    });
+}
 
 mongoose
   .connect(uri)
